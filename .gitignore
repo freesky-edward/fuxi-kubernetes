@@ -54,7 +54,6 @@ ChangeLog
 contrib/vagrant/.vagrant
 
 # Configuration files
-etc/kuryr.conf.sample
 
 # Ignore user specific local.conf settings for vagrant
 contrib/vagrant/user_local.conf

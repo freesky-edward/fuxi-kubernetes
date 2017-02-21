@@ -28,7 +28,7 @@ def list_fuxi_opts():
     registered. A group name of None corresponds to the [DEFAULT] group in
     config files.
 
-    This function is also discoverable via the 'kuryr' entry point under
+    This function is also discoverable via the 'fuxi' entry point under
     the 'oslo_config.opts' namespace.
 
     The purpose of this is to allow tools like the Oslo sample config file

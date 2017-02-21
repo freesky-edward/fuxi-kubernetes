@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from kuryr.lib._i18n import _LE
+from fuxi.i18n import _LE
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 

@@ -14,4 +14,4 @@ import pbr.version
 
 
 __version__ = pbr.version.VersionInfo(
-    'kuryr_kubernetes').version_string()
+    'fuxi_kubernetes').version_string()
