@@ -33,6 +33,8 @@ k8s_opts = [
 CONF = cfg.CONF
 CONF.register_opts(k8s_opts, group='kubernetes')
 
+CONF.register_opts(lib_config.default_opts)
+
 logging.register_options(CONF)
 
 
