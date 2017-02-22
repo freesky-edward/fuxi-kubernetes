@@ -24,13 +24,7 @@ K8S_OBJ_ENDPOINTS = 'Endpoints'
 K8S_OBJ_PV = 'PersistentVolume'
 K8S_OBJ_PVC = 'PersistentVolumeClaim'
 
-K8S_POD_STATUS_PENDING = 'Pending'
-
-K8S_ANNOTATION_PREFIX = 'openstack.org/fuxi'
-K8S_ANNOTATION_PV = 'fuxi-kubernetes'
 FUXI_ANNOTATION_PREFIX = 'openstack.org/createdby'
-
-K8S_OS_VIF_NOOP_PLUGIN = "noop"
 
 FUXI_TIMEOUT_CODE = 400
 DEFAULT_TIMEOUT = 120
