@@ -25,6 +25,7 @@ K8S_OBJ_PV = 'PersistentVolume'
 K8S_OBJ_PVC = 'PersistentVolumeClaim'
 
 FUXI_ANNOTATION_PREFIX = 'openstack.org/createdby'
+FUXI_STORAGE_PREFIX = 'volume.beta.kubernetes.io/storage-class'
 
 FUXI_TIMEOUT_CODE = 400
 DEFAULT_TIMEOUT = 120

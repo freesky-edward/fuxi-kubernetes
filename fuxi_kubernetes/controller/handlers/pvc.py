@@ -118,6 +118,6 @@ class PVCHandler(k8s_base.ResourceEventHandler):
     def _is_fuxi_kubernetes(self, pvc):
         try:
             return (pvc['metadata']['annotations']
-                    [constants.FUXI_ANNOTATION_PREFIX] == 'fuxi-kubernetes')
+                    [constants.FUXI_STORAGE_PREFIX] == 'fuxi-kubernetes')
         except KeyError:
             return False

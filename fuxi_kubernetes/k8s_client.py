@@ -58,48 +58,6 @@ class K8sClient(object):
             raise exc.K8sClientException(response.text)
         return response.json()
 
-    def annotate(self, path, annotations, resource_version=None):
-        """Pushes a resource annotation to the K8s API resource
-
-        The annotate operation is made with a PATCH HTTP request of kind:
-        application/merge-patch+json as described in:
-
-        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#patch-operations  # noqa
-        """
-        LOG.debug("Annotate %(path)s: %(names)s", {
-            'path': path, 'names': list(annotations)})
-        url = self._base_url + path
-        while itertools.count(1):
-            data = jsonutils.dumps({
-                "metadata": {
-                    "annotations": annotations,
-                    "resourceVersion": resource_version,
-                }
-            }, sort_keys=True)
-            response = requests.patch(url, data=data, headers={
-                'Content-Type': 'application/merge-patch+json',
-                'Accept': 'application/json',
-            })
-            if response.ok:
-                return response.json()['metadata']['annotations']
-            if response.status_code == requests.codes.conflict:
-                resource = self.get(path)
-                new_version = resource['metadata']['resourceVersion']
-                retrieved_annotations = resource['metadata'].get(
-                    'annotations', {})
-
-                for k, v in annotations.items():
-                    if v != retrieved_annotations.get(k, v):
-                        break
-                else:
-                    # No conflicting annotations found. Retry patching
-                    resource_version = new_version
-                    continue
-                LOG.debug("Annotations for %(path)s already present: "
-                          "%(names)s", {'path': path,
-                                        'names': retrieved_annotations})
-            raise exc.K8sClientException(response.text)
-
     def watch(self, path):
         params = {'watch': 'true'}
         url = self._base_url + path
