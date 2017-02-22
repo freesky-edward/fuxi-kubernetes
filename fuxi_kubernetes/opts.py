@@ -21,7 +21,7 @@ _fuxi_k8s_opts = [
 
 
 def list_fuxi_opts():
-    """Return a list of oslo_config options available in Kuryr service.
+    """Return a list of oslo_config options available in Fuxi service.
 
     Each element of the list is a tuple. The first element is the name of the
     group under which the list of elements in the second element will be
@@ -32,7 +32,7 @@ def list_fuxi_opts():
     the 'oslo_config.opts' namespace.
 
     The purpose of this is to allow tools like the Oslo sample config file
-    generator to discover the options exposed to users by Kuryr.
+    generator to discover the options exposed to users by Fuxi.
 
     :returns: a list of (group_name, opts) tuples
     """
