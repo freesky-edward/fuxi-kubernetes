@@ -23,7 +23,6 @@ from fuxi_kubernetes import clients
 from fuxi_kubernetes import config
 from fuxi_kubernetes import constants
 from fuxi_kubernetes.controller.handlers import pipeline as h_pipeline
-from fuxi_kubernetes.controller.handlers import pod_volume as h_pvl
 from fuxi_kubernetes.controller.handlers import pvc as h_pvc
 from fuxi_kubernetes import watcher
 
