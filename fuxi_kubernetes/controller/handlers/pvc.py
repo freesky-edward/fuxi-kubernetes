@@ -50,16 +50,6 @@ PV_TEMPLATE = {
 
 
 class PVCHandler(k8s_base.ResourceEventHandler):
-    """Controller side of VIF binding process for Kubernetes pods.
-
-    `VIFHandler` runs on the Kuryr-Kubernetes controller and together with
-    the CNI driver (that runs on 'kubelet' nodes) is responsible for providing
-    networking to Kubernetes pods. `VIFHandler` relies on a set of drivers
-    (which are responsible for managing Neutron resources) to define the VIF
-    object and pass it to the CNI driver in form of the Kubernetes pod
-    annotation.
-    """
-
     OBJECT_KIND = constants.K8S_OBJ_PVC
 
     def __init__(self):
@@ -72,6 +62,9 @@ class PVCHandler(k8s_base.ResourceEventHandler):
         if pvc['status']['phase'] != 'Bound':
             fuxi = clients.get_fuxi_client()
             data = {'Name': pvc['metadata']['uid']}
+            size = self._get_size(pvc)
+            if size is not None:
+                data.update({'Opts': {'size': size.strip('Gi')}})
             status = fuxi.create(data)
             if status != constants.FUXI_TIMEOUT_CODE:
                 k8s = clients.get_kubernetes_client()
@@ -102,6 +95,12 @@ class PVCHandler(k8s_base.ResourceEventHandler):
                 fuxi = clients.get_fuxi_client()
                 data = {'Name': pvc['spec']['volumeName']}
                 fuxi.delete(data)
+
+    def _get_size(self, pvc):
+        try:
+            return pvc['spec']['resources']['requests']['storage']
+        except KeyError:
+            return None
 
     def _generate_pv_template(self, pvc):
         pv_temp = copy.deepcopy(PV_TEMPLATE)
