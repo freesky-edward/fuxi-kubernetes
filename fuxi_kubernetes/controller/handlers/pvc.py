@@ -61,7 +61,7 @@ class PVCHandler(k8s_base.ResourceEventHandler):
             return
         if pvc['status']['phase'] != 'Bound':
             fuxi = clients.get_fuxi_client()
-            data = {'Name': pvc['metadata']['uid']}
+            data = {'Name': pvc['metadata']['name']}
             size = self._get_size(pvc)
             if size is not None:
                 data.update({'Opts': {'size': size.strip('Gi')}})
@@ -112,7 +112,7 @@ class PVCHandler(k8s_base.ResourceEventHandler):
             config.CONF.kubernetes.volume_mount + pvc['metadata']['uid']
         pv_temp['spec']['capacity']['storage'] = \
             pvc['spec']['resources']['requests']['storage']
-        pv_temp['metadata']['name'] = pvc['metadata']['uid']
+        pv_temp['metadata']['name'] = pvc['metadata']['name']
         return pv_temp
 
     def _is_fuxi_kubernetes(self, pvc):
