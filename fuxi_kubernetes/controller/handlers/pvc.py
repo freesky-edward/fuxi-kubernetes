@@ -43,7 +43,7 @@ PV_TEMPLATE = {
     'metadata': {
         'name': 'pv0001',
         'annotations': {
-            constants.FUXI_ANNOTATION_PREFIX: 'fuxi-kubernetes'
+            constants.FUXI_STORAGE_PREFIX: 'fuxi-kubernetes'
         }
     }
 }
