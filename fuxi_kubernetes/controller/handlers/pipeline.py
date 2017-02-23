@@ -28,7 +28,7 @@ LOG = logging.getLogger(__name__)
 class ControllerPipeline(h_dis.EventPipeline):
     """Serves as an entry point for controller Kubernetes events.
 
-    `ControllerPipeline` is an entry point handler for the Kuryr-Kubernetes
+    `ControllerPipeline` is an entry point handler for the Fuxi-Kubernetes
     controller. `ControllerPipeline` allows registering
     :class:`fuxi_kubernetes.handlers.k8s_base.ResourceEventHandler`s and
     ensures the proper handler is called for each event that is passed to the
