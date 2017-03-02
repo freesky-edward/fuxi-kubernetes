@@ -42,7 +42,6 @@ class FuxiK8sService(service.Service):
         for resource in ["persistentvolumeclaims"]:
             self.watcher.add("%s/%s" % (constants.K8S_API_BASE, resource))
         pipeline.register(h_pvc.PVCHandler())
-        #pipeline.register(h_pvl.PodVolumeHandler())
 
     def start(self):
         LOG.info(_LI("Service '%s' starting"), self.__class__.__name__)

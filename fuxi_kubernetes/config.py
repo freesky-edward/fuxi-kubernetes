@@ -22,8 +22,8 @@ LOG = logging.getLogger(__name__)
 
 k8s_opts = [
     cfg.StrOpt('api_root',
-        help=_("The root URL of the Kubernetes API"),
-        default=os.environ.get('K8S_API', 'http://localhost:8080')),
+               help=_("The root URL of the Kubernetes API"),
+               default=os.environ.get('K8S_API', 'http://localhost:8080')),
     cfg.StrOpt('volume_mount',
                default='/fuxi/data',
                help=_('At which the docker volume will mount.')),

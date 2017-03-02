@@ -18,14 +18,9 @@ K8S_API_NAMESPACES = K8S_API_BASE + '/namespaces'
 K8S_DEFAULT_NAMESPACES = 'default'
 
 K8S_OBJ_NAMESPACE = 'Namespace'
-K8S_OBJ_POD = 'Pod'
-K8S_OBJ_SERVICE = 'Service'
-K8S_OBJ_ENDPOINTS = 'Endpoints'
-K8S_OBJ_PV = 'PersistentVolume'
 K8S_OBJ_PVC = 'PersistentVolumeClaim'
 
 FUXI_ANNOTATION_PREFIX = 'openstack.org/createdby'
 FUXI_STORAGE_PREFIX = 'volume.beta.kubernetes.io/storage-class'
 
-FUXI_TIMEOUT_CODE = 400
 DEFAULT_TIMEOUT = 120

@@ -14,13 +14,12 @@
 #    under the License.
 
 import contextlib
-import itertools
 
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 import requests
 
-from fuxi_kubernetes import  constants
+from fuxi_kubernetes import constants
 from fuxi_kubernetes import exceptions as exc
 
 LOG = logging.getLogger(__name__)
@@ -75,6 +74,6 @@ class K8sClient(object):
 
     def get_pvc(self, namespace, pvc_name):
         pvc_path = constants.K8S_API_NAMESPACES + "/" + namespace + \
-                   "/persistentvolumeclaims/" + pvc_name
+            "/persistentvolumeclaims/" + pvc_name
         pvc_status = self.get(pvc_path)
         return pvc_status

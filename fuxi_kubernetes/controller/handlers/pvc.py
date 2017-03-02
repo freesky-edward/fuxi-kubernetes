@@ -18,8 +18,9 @@ import copy
 from oslo_log import log as logging
 
 from fuxi_kubernetes import clients
-from fuxi_kubernetes import constants
 from fuxi_kubernetes import config
+from fuxi_kubernetes import constants
+from fuxi_kubernetes import exceptions as exc
 from fuxi_kubernetes.handlers import k8s_base
 
 LOG = logging.getLogger(__name__)
@@ -65,17 +66,20 @@ class PVCHandler(k8s_base.ResourceEventHandler):
             size = self._get_size(pvc)
             if size is not None:
                 data.update({'Opts': {'size': size.strip('Gi')}})
-            status = fuxi.create(data)
-            if status != constants.FUXI_TIMEOUT_CODE:
-                k8s = clients.get_kubernetes_client()
-                pvc_status = k8s.get_pvc(pvc['metadata']['namespace'],
-                                         pvc['metadata']['name'])
-                if pvc_status['status']['phase'] == 'Bound':
-                    fuxi.delete(data)
-                    return
+            try:
+                fuxi.create(data)
+            except exc.FuxiClientException as e:
+                LOG.error("fuxi create volume failed with error: %s", e)
+                raise
+            k8s = clients.get_kubernetes_client()
+            try:
                 pv_temp = self._generate_pv_template(pvc)
                 pv_url = constants.K8S_API_BASE + '/persistentvolumes'
                 k8s.post(pv_url, pv_temp)
+            except exc.K8sClientException as e:
+                LOG.error("create pvc failed with error: %s", e)
+                fuxi.delete(data)
+                raise
 
     def on_deleted(self, pvc):
         LOG.debug("on_deleted watch pvc: %s", pvc)
@@ -84,17 +88,30 @@ class PVCHandler(k8s_base.ResourceEventHandler):
         if pvc['status']['phase'] == 'Bound':
             k8s = clients.get_kubernetes_client()
             pv_path = constants.K8S_API_BASE + "/persistentvolumes/" + \
-                      pvc['spec']['volumeName']
-            pv_status = k8s.get(pv_path)
-            # if pv_status['metadata']['annotations'][constants.FUXI_ANNOTATION_PREFIX] == 'fuxi-kubernetes'\
+                pvc['spec']['volumeName']
+            try:
+                pv_status = k8s.get(pv_path)
+            except exc.K8sClientException as e:
+                LOG.error("get pvc failed with error: %s", e)
+                raise
+            # if pv_status['metadata']['annotations'][constants.
+            # FUXI_ANNOTATION_PREFIX] == 'fuxi-kubernetes'\
             if pv_status['spec']['claimRef']['name'] == \
-                            pvc['metadata']['name']:
-                pv_path = constants.K8S_API_BASE + "/persistentvolumes/" + \
-                          pvc['spec']['volumeName']
-                k8s.delete(pv_path)
-                fuxi = clients.get_fuxi_client()
-                data = {'Name': pvc['spec']['volumeName']}
-                fuxi.delete(data)
+                    pvc['metadata']['name']:
+                try:
+                    fuxi = clients.get_fuxi_client()
+                    data = {'Name': pvc['spec']['volumeName']}
+                    fuxi.delete(data)
+                except exc.FuxiClientException as e:
+                    LOG.error("fuxi delete volume failed with error: %s", e)
+                    raise
+                try:
+                    pv_path = constants.K8S_API_BASE + "/persistentvolumes/" + \
+                        pvc['spec']['volumeName']
+                    k8s.delete(pv_path)
+                except exc.K8sClientException as e:
+                    LOG.error("delete pvc failed with error: %s", e)
+                    raise
 
     def _get_size(self, pvc):
         try:

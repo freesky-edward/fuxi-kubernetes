@@ -13,18 +13,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import abc
-import six
+import mock
+
+from fuxi_kubernetes.tests import base as test_base
 
 
-@six.add_metaclass(abc.ABCMeta)
-class EventHandler(object):
-    """Base class for event handlers."""
+class TestControllerCmd(test_base.TestCase):
 
-    @abc.abstractmethod
-    def __call__(self, event):
-        """Handle the event."""
-        raise NotImplementedError()
+    @mock.patch('fuxi_kubernetes.controller.service.start')
+    @mock.patch('eventlet.monkey_patch')
+    def test_start(self, m_evmp, m_start):
+        # NOTE(ivc): eventlet.monkey_patch is invoked during the module
+        # import, so the controller cmd has to be imported locally to verify
+        # that monkey_patch is called
+        from fuxi_kubernetes.cmd.eventlet import controller
 
-    def __str__(self):
-        return self.__class__.__name__
+        controller.start()
+
+        m_evmp.assert_called()
+        m_start.assert_called()

@@ -13,13 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import itertools
-import time
-
 from oslo_log import log as logging
 import requests
 
-from fuxi_kubernetes import constants
 from fuxi_kubernetes import exceptions as exc
 
 LOG = logging.getLogger(__name__)
@@ -43,14 +39,6 @@ class FuxiClient(object):
         response = requests.post(url, json=data)
         if not response.ok:
             raise exc.FuxiClientException(response.text)
-        # for attempts in itertools.count(1):
-        #     if self.get(data)['Err'] != 'Volume Not Found':
-        #         LOG.debug("Creating volume finish in %(se)s seconds",
-        #                   {"se": attempts})
-        #         break
-        #     if attempts > constants.DEFAULT_TIMEOUT:
-        #         return constants.FUXI_TIMEOUT_CODE
-        #     time.sleep(1)
         return response.json()
 
     def delete(self, data):

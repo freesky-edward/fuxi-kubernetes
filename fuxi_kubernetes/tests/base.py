@@ -9,9 +9,14 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from fuxi_kubernetes import config
+from oslotest import base
 
-import pbr.version
 
+class TestCase(base.BaseTestCase):
 
-__version__ = pbr.version.VersionInfo(
-    'fuxi_kubernetes').version_string()
+    """Test case base class for all unit tests."""
+    def setUp(self):
+        super(TestCase, self).setUp()
+        args = []
+        config.init(args=args)

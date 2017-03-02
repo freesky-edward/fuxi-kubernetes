@@ -85,7 +85,7 @@ class Async(base.EventHandler):
             # impact).
             # Possible solutions (can be combined):
             #  - use K8s ThirdPartyResources to store data/annotations instead
-            #    of native K8s resources (assuming Kuryr-K8s will own those
+            #    of native K8s resources (assuming Fuxi-K8s will own those
             #    resources and no one else would update them)
             #  - use the resulting 'resourceVersion' received from K8sClient's
             #    'annotate' to provide feedback to Async to skip all events

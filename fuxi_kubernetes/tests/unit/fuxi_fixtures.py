@@ -13,18 +13,24 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import abc
-import six
+import fixtures
+import mock
+
+from fuxi_kubernetes import fuxi_client
+from fuxi_kubernetes import k8s_client
 
 
-@six.add_metaclass(abc.ABCMeta)
-class EventHandler(object):
-    """Base class for event handlers."""
+class MockK8sClient(fixtures.Fixture):
+    def _setUp(self):
+        self.client = mock.Mock(k8s_client.K8sClient)
+        self.useFixture(fixtures.MockPatch(
+            'fuxi_kubernetes.clients.get_kubernetes_client',
+            lambda: self.client))
 
-    @abc.abstractmethod
-    def __call__(self, event):
-        """Handle the event."""
-        raise NotImplementedError()
 
-    def __str__(self):
-        return self.__class__.__name__
+class MockFuxiClient(fixtures.Fixture):
+    def _setUp(self):
+        self.client = mock.Mock(fuxi_client.FuxiClient)
+        self.useFixture(fixtures.MockPatch(
+            'fuxi_kubernetes.clients.get_fuxi_client',
+            lambda: self.client))
